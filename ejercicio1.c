@@ -4,16 +4,16 @@
 #include <time.h>
 #define C 1000
 
-struct {
+typedef struct {
     int TareaID;//Numérico autoincremental comenzando en 1000
     char *Descripcion; //
     int Duracion; // entre 10 – 100
-}typedef Tarea;
+} Tarea;
 
- struct {
+typedef struct Nodo {
     Tarea T;
     struct Nodo *Siguiente;
-}typedef Nodo;
+} Nodo;
 
 
 
@@ -28,7 +28,7 @@ struct {
 
         tareaPendiente->T.Duracion=*duracion;
 
-        tareaPendiente->T.Descripcion=(char*)malloc(*tamanio*sizeof(char)+1);
+        tareaPendiente->T.Descripcion=(char*)malloc((*tamanio)*sizeof(char)+1);
 
         strcpy(tareaPendiente->T.Descripcion,descripcion);
 
@@ -40,32 +40,44 @@ struct {
     }
 
 
+    void insertarNodo(Nodo **lista, Nodo* tareaPendiente){
+        tareaPendiente->Siguiente=*lista;
+        *lista=tareaPendiente;
+    }
+
 
 int main()
 {
     srand(time(NULL));
-    int incremento;
+    int incremento=0;
     int numeroTPend;
     int duracion;
-    int tamanio;
+    int tamanio=0;
     char descripcion[C];
     Nodo *Inicio=creacion();
-
-    printf("Ingrese el numero de tareas que quieres dar`\n");
-    scanf("%d",&numeroTPend);
-
-    for (int i = 0; i < numeroTPend; i++)
+    int final=0;
+   
+    printf("Ponga 0 si quiere agregar una tarea o 1 si quiere terminar de agregar tareas \n");
+    scanf("%d",&final);
+    for (int i = 0; i < final==0; i++)
     {
         incremento=1000+i;
         printf("\nIngrese la duracion de la tarea entre 10 y 100\n");
         scanf("%d",&duracion);
 
         printf("Ingrse la descripcion de la tarea\n");
+
+        fflush(stdin);
         gets(descripcion);
         tamanio=strlen(descripcion);
 
         Nodo *tareaPendiente= CrearNodo(&duracion, descripcion, &tamanio,&incremento);
-
+        insertarNodo(&Inicio, tareaPendiente);
+        
+        printf("Desea seguir agregando tareas ponga 0 si es asi o 1 si quiere finalizar\n");
+        
+        scanf("%d",&final);
+      
     }
     
     
