@@ -44,24 +44,50 @@ typedef struct Nodo {
         tareaPendiente->Siguiente=*lista;
         *lista=tareaPendiente;
     }
+   void pasajeDeNodos(Nodo **listaI, Nodo **listaF,int *incremento){
+        
+        Nodo**aux=&(*listaI);
+        
+        while (*listaI)
+        {
+            
+            if ((*listaI)->T.TareaID == *incremento)
+            {   
+                Nodo* temp=*listaI;
+                *aux=(*listaI)->Siguiente;
+                
+                temp->Siguiente=NULL;
+                insertarNodo(listaF,temp);
+
+                break;
+            }
+            aux=&(*listaI);
+
+           *listaI= (*listaI)->Siguiente;
+        }
+        
+
+    }
 
 
 int main()
 {
     srand(time(NULL));
-    int incremento=0;
+    int incremento=1000;
     int numeroTPend;
     int duracion;
     int tamanio=0;
     char descripcion[C];
     Nodo *Inicio=creacion();
+    Nodo *Fin=creacion();
     int final=0;
    
     printf("Ponga 0 si quiere agregar una tarea o 1 si quiere terminar de agregar tareas \n");
     scanf("%d",&final);
-    for (int i = 0; i < final==0; i++)
+    
+    while(final==0)
     {
-        incremento=1000+i;
+        incremento+=1;
         printf("\nIngrese la duracion de la tarea entre 10 y 100\n");
         scanf("%d",&duracion);
 
@@ -80,6 +106,9 @@ int main()
       
     }
     
+
+
+
     
     
     
