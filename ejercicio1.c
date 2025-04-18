@@ -44,7 +44,7 @@ typedef struct Nodo {
         tareaPendiente->Siguiente=*lista;
         *lista=tareaPendiente;
     }
-   void pasajeDeNodos(Nodo **listaI, Nodo **listaF,int *incremento){
+   /*void pasajeDeNodos(Nodo **listaI, Nodo **listaF,int *incremento){
         
         Nodo**aux=&(*listaI);
         
@@ -67,58 +67,79 @@ typedef struct Nodo {
         }
         
 
-    }
+    }*/
 
+        void pasajeDeNodos(Nodo **listaI, Nodo **listaF, int *incremento) {
+        Nodo **aux = listaI;
+
+        while (*aux) {
+            if ((*aux)->T.TareaID == *incremento) {
+                Nodo *temp = *aux;
+                *aux = (*aux)->Siguiente;
+                temp->Siguiente = NULL;
+                insertarNodo(listaF, temp);
+                break;
+            }
+            aux = &(*aux)->Siguiente;
+        }
+    }
+//ottra forma   
     void mostrarListadoTareas(Nodo **Lista){
 
-        while (*Lista!=NULL)
+        Nodo*aux=*Lista;
+
+        while (aux!=NULL)
         {
 
-            printf("El id de la tarea es: %d\n",(*Lista)->T.TareaID);
+            printf("El id de la tarea es: %d\n",aux->T.TareaID);
             printf("La descripcion de la tarea es: \n");
-            fflush(stdin);
-            puts((*Lista)->T.Descripcion);
-            fflush(stdin);
-            printf("La duracion de la lista es: %d\n",(*Lista)->T.Duracion);
+            
+            puts(aux->T.Descripcion);
+            
+            printf("La duracion de la lista es: %d\n",aux->T.Duracion);
             printf("\n");
 
-
-            *Lista=(*Lista)->Siguiente;
+            
+            aux=aux->Siguiente;
+           
         }
         
 
 
     }
 
-    void consultaTareas(Nodo **listaI, Nodo **listaF,int*id,char palabraClave[]){
-        int consulta;
-        printf("Oprima 1 si quiere consultar por Id de la tarea, oprima 2 si quiere consultar por una palabra clave, otro numero si quiere salir de la operacion\n");
-        scanf("%d",&consulta);
-        while (consulta<3 && consulta>0)
-        {
+    void consultaTareas(Nodo **listaI, Nodo **listaF,int*id,char palabraClave[],int *consulta){
+        
+
+        Nodo *aux1=*listaI;
+        Nodo *axu2=*listaF;
+        
             
         
         
-        switch (consulta)
+        switch (*consulta)
         {
         case 1:
 
-            while (*listaI || *listaF)
+            while (aux1 || axu2)
             {
                 
-                if ((*listaI)->T.TareaID==*id)
+                if (aux1!=NULL && aux1->T.TareaID==*id)
                 {
                     printf("La tarea pertenece a tarea pendiente");
-                }else if((*listaF)->T.TareaID==*id){
+                    break;
+                }else if(axu2!=NULL && axu2->T.TareaID==*id){
                     printf("La tarea pertenece a tarea realizada");
+                    break;
                 }else{
                     printf("No existe tarea con ese id");
+                    break;  
                 }
                 
 
 
-                *listaI=(*listaI)->Siguiente;
-                *listaF=(*listaF)->Siguiente;
+                aux1=aux1->Siguiente;
+                axu2=axu2->Siguiente;
             }
             
  
@@ -126,22 +147,25 @@ typedef struct Nodo {
         
         case 2:
 
-        while (*listaI || *listaF)
+        while (aux1 || axu2)
         {
             
-            if (strstr((*listaI)->T.Descripcion,palabraClave)!=NULL)
+            if (aux1!=NULL && strstr(aux1->T.Descripcion,palabraClave)!=NULL)
             {
                 printf("La tarea pertenece a tarea pendiente");
-            }else if(strstr((*listaF)->T.Descripcion,palabraClave)!=NULL){
+                break;
+            }else if(axu2!=NULL && strstr((axu2)->T.Descripcion,palabraClave)!=NULL){
                 printf("La tarea pertenece a tarea realizada");
+                break;
             }else{
                 printf("No existe tarea con esa descripcion");
+                break;
             }
             
 
 
-            *listaI=(*listaI)->Siguiente;
-            *listaF=(*listaF)->Siguiente;
+            aux1=aux1->Siguiente;
+            axu2=axu2->Siguiente;
         }
 
 
@@ -151,9 +175,7 @@ typedef struct Nodo {
 
         
         }
-        printf("Oprima 1 para otra consulta por id de tarea, 2 para consultar por palabra clave, otro numero para salir\n");
-        scanf("%d", &consulta);
-    }
+       
         
 
 
@@ -175,6 +197,7 @@ int main()
     int final=0;
     int PasajeDeNodo;
     int idTarea;
+    int consulta;
 
    
     printf("Ponga 0 si quiere agregar una tarea o 1 si quiere terminar de agregar tareas \n");
@@ -218,18 +241,23 @@ int main()
 
     printf("Lista de Tareas Pendientes:\n");
     mostrarListadoTareas(&TareasPendientes);
-    fflush(stdin);
+    
     printf("Lista de Tareas Realizadas:\n");
     mostrarListadoTareas(&TareasRealizadas);
 
     
-   
+    printf("Oprima 1 si quiere consultar por Id de la tarea, oprima 2 si quiere consultar por una palabra clave, otro numero si quiere salir de la operacion\n");
+    scanf("%d",&consulta);
+    while (consulta<3 && consulta>0)
+    {
     printf("Ingrese la palabra clave para buscar en las tareas: \n");
     fflush(stdin);
     gets(palabraClave);
-    fflush(stdin);
-    consultaTareas(&TareasPendientes, &TareasRealizadas, &id, palabraClave);
     
+    consultaTareas(&TareasPendientes, &TareasRealizadas, &id, palabraClave,&consulta);
     
+    printf("Oprima 1 para otra consulta por id de tarea, 2 para consultar por palabra clave, otro numero para salir\n");
+    scanf("%d", &consulta);
+    }
     return 0;
 }
