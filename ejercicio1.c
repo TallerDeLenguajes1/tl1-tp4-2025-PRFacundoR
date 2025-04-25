@@ -82,8 +82,10 @@ Nodo *pasajeDeNodos(Nodo **listaI, Nodo **listaF, int *incremento)
             *aux = (*aux)->Siguiente;
             temp->Siguiente = NULL;
             return temp;
+        }else{
+            aux = &(*aux)->Siguiente;
         }
-        aux = &(*aux)->Siguiente;
+        
     }
 }
 // ottra forma
